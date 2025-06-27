@@ -2,7 +2,7 @@ import os
 import httpx
 from typing import Optional
 
-from bot.config import settings
+from config import settings
 
 API_BASE_URL = settings.API_URL  # имя контейнера из docker-compose
 

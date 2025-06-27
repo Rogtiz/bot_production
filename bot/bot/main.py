@@ -7,9 +7,9 @@ import logging
 import re
 
 from config import settings
-import bot.api_client
-import bot.formatter
-import bot.avatar_utils
+import api_client
+import formatter
+import avatar_utils
 
 
 logging.basicConfig(level=logging.INFO, filename="log.log", filemode="w",
