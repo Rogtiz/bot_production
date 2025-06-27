@@ -34,6 +34,7 @@ async def create_avatar(username):
 
 
 async def get_avatar(username):
+    avatar_img, frame = None, None
     user_id = await api_client.get_player_id(username)
     user_id = user_id['user_id']
     user = await api_client.get_player_ranking(user_id)
