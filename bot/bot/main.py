@@ -182,7 +182,19 @@ async def cmd_update_season(message: types.Message):
         if user["admin_level"] < 1:
             return
     current_season = await api_client.get_property(key="season_id")
-    result = await api_client.update_property(key="season_id", value=str(int(current_season.value) + 1))
+    result = await api_client.update_property(key="season_id", value=str(int(current_season['value']) + 1))
+    await bot.send_message(CHANNEL_SECRET_LOGS, f"{str(user)} сменил сезон с\n{str(current_season)} на\n{str(result)}")
+    await message.reply(f"season_id successfully changed")
+
+
+@dp.message(Command('return_previous_season'))
+async def cmd_return_season(message: types.Message):
+    user = await api_client.get_user_by_chat_id(str(message.chat.id))
+    if user:
+        if user["admin_level"] < 1:
+            return
+    current_season = await api_client.get_property(key="season_id")
+    result = await api_client.update_property(key="season_id", value=str(int(current_season['value']) - 1))
     await bot.send_message(CHANNEL_SECRET_LOGS, f"{str(user)} сменил сезон с\n{str(current_season)} на\n{str(result)}")
     await message.reply(f"season_id successfully changed")
 
@@ -196,12 +208,13 @@ async def cmd_get_logs(message: types.Message):
     await message.answer_document(logs)
 
 
-# @dp.message(Command('get_info'))
-# async def cmd_get_info(message: types.Message):
-#     if not (database.is_user_admin(message.from_user.username)) or not (message.chat.type == 'private'):
-#         return
-#     logs = types.FSInputFile("info.log")
-#     await message.answer_document(logs)
+@dp.message(Command('get_info'))
+async def cmd_get_info(message: types.Message):
+    user = await api_client.get_user_by_chat_id(str(message.chat.id))
+    if (user["admin_level"] < 2) or not (message.chat.type == 'private'):
+        return
+    logs = types.FSInputFile("info.log")
+    await message.answer_document(logs)
 
 
 # @dp.message(Command('get_day_graphic'))
@@ -281,13 +294,13 @@ async def cmd_get_logs(message: types.Message):
 #         await message.answer("Enter /send_broadcast_message [message]")
 
 
-# @dp.message(Command('get_feedback'))
-# async def cmd_get_feedback(message: types.Message):
-#     user = await api_client.get_user_by_chat_id(str(message.chat.id))
-#     if (user["admin_level"] < 2) or not (message.chat.type == 'private'):
-#         return
-#     feedback = database.get_unfixed_feedback()
-#     await message.answer(feedback)
+@dp.message(Command('get_feedback'))
+async def cmd_get_feedback(message: types.Message):
+    user = await api_client.get_user_by_chat_id(str(message.chat.id))
+    if (user["admin_level"] < 2) or not (message.chat.type == 'private'):
+        return
+    feedback = await formatter.format_feedback()
+    await message.answer(feedback)
 
 
 # @dp.message(Command('answer_feedback'))
@@ -328,7 +341,8 @@ async def update_check_text(message: types.Message, new_text, player_name, callb
         await message.edit_text(
             new_text,
             reply_markup=get_keyboard(player_name),
-            parse_mode="Markdown"
+            parse_mode="Markdown",
+            disable_web_page_preview=True
         )
     except:
         await bot.answer_callback_query(callback_id, "Вы уже на выбранной странице!")
@@ -371,7 +385,7 @@ async def handle_message(message: types.Message):
             image_from_pc,
             caption="Изображение из файла на компьютере"
         )
-        await message.answer(player_info, reply_markup=get_keyboard(message.text), parse_mode="Markdown")
+        await message.answer(player_info, reply_markup=get_keyboard(message.text), parse_mode="Markdown", disable_web_page_preview=True)
         nick_of_player = username.replace("_", "\\_")
         await bot.send_message(CHANNEL_LOGS, f"{nick} чекает ник {nick_of_player}", parse_mode='Markdown')
         os.remove(f"images/{username}.png")

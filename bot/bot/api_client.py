@@ -32,6 +32,17 @@ async def create_feedback(chat_id: str, content: str) -> dict:
     response.raise_for_status()
     return response.json()
 
+
+async def get_feedback() -> Optional[list[dict]]:
+    try:
+        response = await client.get(f"/bot/feedback")
+        response.raise_for_status()
+        return response.json()
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 404:
+            return None
+        raise
+
 # --- PROPERTY ---
 async def get_property(key: str) -> Optional[dict]:
     try:
@@ -45,8 +56,7 @@ async def get_property(key: str) -> Optional[dict]:
 
 
 async def update_property(key: str, value: str) -> dict:
-    payload = {"value": value}
-    response = await client.put(f"/bot/property/{key}", json=payload)
+    response = await client.put(f"/bot/property/{key}?value={value}")
     response.raise_for_status()
     return response.json()
 

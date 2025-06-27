@@ -1,10 +1,13 @@
 from typing import OrderedDict
 import api_client
 import pycountry
+from aiogram.utils.markdown import link
 
 GWENT_SITE_AVAILABILITY_ERROR_MESSAGE = ("Недостаточно данных: сезон только начался или возникли проблемы на стороне официального "
                     "сайта.\n\nThe command is currently unavailable due to a lack of data. The current season has "
                     "just started, or there are technical issues on playgwent.com.")
+
+CHANNEL_LINK = link("Бутеры от Бужи", "https://t.me/gwentnews")
 
 FACTIONS = {
     'Nilfgaard': '🔆 NG',
@@ -75,7 +78,7 @@ async def format_ranking_info(username: str):
                     f"Prestige: {ranking_info['paragon']['paragon_level']}\n"
                     f"Rank: {rank}\n"
                     f"Global Position: {ranking_info.get('position', '0')}\nRegional Position: {ranking_info.get('continental_position', '0')}\n"
-                    f"MMR: {ranking_info.get('score', '0')}\n\nRegion/Country: {ranking_info.get('continent', 'NA')}/{ranking_info.get('country', 'NA')}")
+                    f"MMR: {ranking_info.get('score', '0')}\n\nRegion/Country: {ranking_info.get('continent', 'NA')}/{ranking_info.get('country', 'NA')}\n{CHANNEL_LINK}")
     return None
 
 
@@ -104,7 +107,7 @@ async def format_mmr_info(username: str):
                                  f"No | "
                                  f"0\n")
 
-            mmr_info += "\n```"
+            mmr_info += f"\n```\n{CHANNEL_LINK}"
             return mmr_info
 
 
@@ -136,7 +139,7 @@ async def format_seasonal_info(username: str):
                     ranking_info['games_count'] != 0 else 0
                 season_stats += (f"\nAll: {ranking_info['wins_count']} | {ranking_info['losses_count']} | "
                                  f"{ranking_info['draws_count']} | {ranking_info['games_count']} | "
-                                 f"{overall_winrate}%\n\n```")
+                                 f"{overall_winrate}%\n\n```\n{CHANNEL_LINK}")
             else:
                 for key, value in FACTIONS.items():
                     season_stats += (f"{value}: "
@@ -146,7 +149,7 @@ async def format_seasonal_info(username: str):
                                      f"0 | 0%\n")
                 season_stats += (f"\nAll: 0 | 0 | "
                                  f"0 | 0 | "
-                                 f"0%\n\n```")
+                                 f"0%\n\n```\n{CHANNEL_LINK}")
             return season_stats
 
 
@@ -165,7 +168,7 @@ async def format_overall_wins_info(username: str):
                 overall_wins_info += f"{FACTIONS[key]}: {profile_data['stats']['wins'][key]}\n"
 
             overall_wins_info += (f"\nAll: {all_wins}\n```\nGG sent: {profile_data['stats']['ggs_sent_count']}\nGG received: "
-                                  f"{profile_data['stats']['ggs_received_count']}")
+                                  f"{profile_data['stats']['ggs_received_count']}\n{CHANNEL_LINK}")
             return overall_wins_info
 
 
@@ -173,7 +176,7 @@ async def format_collection_info(username: str):
     user_id = await api_client.get_player_id(username)
     if user_id:
         user_id = user_id['user_id']
-        deck_info = await api_client.get_player_deck()
+        deck_info = await api_client.get_player_deck(user_id)
         if deck_info:
             username = username.replace("_", "\\_")
             collection_info = {
@@ -221,5 +224,15 @@ async def format_collection_info(username: str):
                 collection_result += (f"{faction}: {cards['non_premium']}/{cards['non_premium_overall']} - "
                                       f"{cards['premium']}/{cards['premium_overall']} - "
                                       f"{cards['any']}/{cards['any_overall']}\n")
-            collection_result += f"\n{neutral_info}All: {all_current_cards}/{all_overall_cards}\n```"
+            collection_result += f"\n{neutral_info}All: {all_current_cards}/{all_overall_cards}\n```\n{CHANNEL_LINK}"
             return collection_result
+
+
+async def format_feedback():
+    feedback = await api_client.get_feedback()
+    if feedback:
+        result = "Feedback:\n"
+        for feedback_item in feedback:
+            result += f"{feedback_item['id']}. {feedback_item['user_id']} - {feedback_item['message']} ({"fixed" if feedback_item['is_fixed'] else "unfixed"})\n"
+        return result
+    return "There is an error"
