@@ -233,6 +233,6 @@ async def format_feedback():
     if feedback:
         result = "Feedback:\n"
         for feedback_item in feedback:
-            result += f"{feedback_item['id']}. {feedback_item['user_id']} - {feedback_item['message']} ({"fixed" if feedback_item['is_fixed'] else 'unfixed'})\n"
+            result += f"{feedback_item['id']}. {feedback_item['user_id']} - {feedback_item['message']} ({'fixed' if feedback_item['is_fixed'] else 'unfixed'})\n"
         return result
     return "There is an error"
