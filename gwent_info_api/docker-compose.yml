@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    container_name: fastapi_app
+    ports:
+      - "8000:80"
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    networks:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis_server
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+networks:
+  backend:
