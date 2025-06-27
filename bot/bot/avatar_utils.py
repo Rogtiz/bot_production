@@ -2,7 +2,7 @@ from urllib.request import urlretrieve
 from PIL import Image
 import os
 
-import api_client
+import bot.api_client
 
 # Set common size for everything
 size = (512, 512)

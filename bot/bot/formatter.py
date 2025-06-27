@@ -1,5 +1,5 @@
 from typing import OrderedDict
-import api_client
+import bot.api_client
 import pycountry
 
 GWENT_SITE_AVAILABILITY_ERROR_MESSAGE = ("Недостаточно данных: сезон только начался или возникли проблемы на стороне официального "
