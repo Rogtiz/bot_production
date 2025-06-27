@@ -44,14 +44,14 @@ async def format_mmr_threshold_of_ranks():
     for rank in ranks.keys():
         if ranks_info is None:
             return GWENT_SITE_AVAILABILITY_ERROR_MESSAGE
-        result += f"{ranks_info[rank]["place"]} - {ranks_info[rank]["country"]} - {ranks_info[rank]["nickname"]} - {ranks_info[rank]["matches"]} - {ranks_info[rank]["mmr"]}\n"
+        result += f"{ranks_info[rank]['place']} - {ranks_info[rank]['country']} - {ranks_info[rank]['nickname']} - {ranks_info[rank]['matches']} - {ranks_info[rank]['mmr']}\n"
     return result
 
 
 async def format_username_by_place(place: int):
     info = await api_client.get_username_by_place(place)
     if info:
-        return f"{info["place"]} - {info["country"]} - {info["nickname"]} - {info["matches"]} - {info["mmr"]}\n"
+        return f"{info['place']} - {info['country']} - {info['nickname']} - {info['matches']} - {info['mmr']}\n"
     return GWENT_SITE_AVAILABILITY_ERROR_MESSAGE
 
 
