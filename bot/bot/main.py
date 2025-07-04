@@ -433,7 +433,8 @@ async def handle_message(message: types.Message):
     else:
         if not (message.chat.type == 'private'):
             return
-        await message.answer("Profile is not found")
+        await message.answer("Аккаунт пользователя не найден, либо данный пользователь не заходил в игру в текущем сезоне.\n"
+                         "The user's account was not found, or this user has not logged into the game in the current season.")
 
 
 @dp.callback_query(F.data.startswith("check"))
