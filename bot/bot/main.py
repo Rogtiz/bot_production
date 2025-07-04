@@ -404,7 +404,7 @@ async def handle_message(message: types.Message):
     print(message.text)
     username = message.text
     player_info = await formatter.format_ranking_info(username)
-    if (message.chat.type == 'group' or message.chat.type == 'supergroup') and message.chat.id not in group_list:
+    if (message.chat.type == 'group' or message.chat.type == 'supergroup'):
         group_name = message.chat.full_name
         if len(group_name) < 3:
             group_name = message.chat.username
