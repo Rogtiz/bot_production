@@ -3,6 +3,7 @@ import os
 
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters.command import Command, CommandObject
+from aiogram.enums import ChatMemberStatus
 import logging
 import re
 
@@ -173,6 +174,46 @@ async def cmd_feedback(message: types.Message, command: CommandObject):
         await message.answer("Thank you for feedback ❤️")
     else:
         await message.answer("Enter /feedback [message]")
+
+
+@dp.message(Command('check_rights'))
+async def cmd_check_rights(message: types.Message, command: CommandObject):
+    user = await api_client.get_user_by_chat_id(str(message.chat.id))
+    if message.chat.type != 'private' or not user or user.get("admin_level") < 3:
+        return
+    text = command.args
+    if text:
+        text = text.split()
+        bot_member = await bot.get_chat_member(chat_id=text[0], user_id=bot.id)
+
+        if bot_member.status == ChatMemberStatus.ADMINISTRATOR:
+            # Теперь вы можете получить доступ к полям, описывающим права администратора
+            response_text = "Мои права администратора в этом чате:\n"
+            response_text += f"- Может менять информацию о чате: {member.can_change_info}\n"
+            response_text += f"- Может удалять сообщения: {member.can_delete_messages}\n"
+            response_text += f"- Может приглашать пользователей: {member.can_invite_users}\n"
+            response_text += f"- Может ограничивать участников: {member.can_restrict_members}\n"
+            response_text += f"- Может закреплять сообщения: {member.can_pin_messages}\n"
+            response_text += f"- Может добавлять новых администраторов: {member.can_promote_members}\n"
+            # Дополнительные права для каналов
+            if message.chat.type == types.ChatType.CHANNEL:
+                response_text += f"- Может постить сообщения: {member.can_post_messages}\n"
+                response_text += f"- Может редактировать сообщения других: {member.can_edit_messages}\n"
+                response_text += f"- Может управлять видеочатами: {member.can_manage_video_chats}\n"
+
+            # Для aiogram 3.x, некоторые права могут быть вложены в ChatPermissions
+            # if isinstance(member, types.ChatMemberAdministrator):
+            #     if member.permissions:
+            #         response_text += "\nДополнительные разрешения (если применимо):\n"
+            #         response_text += f"- Может отправлять сообщения: {member.permissions.can_send_messages}\n"
+            #         response_text += f"- Может отправлять медиа: {member.permissions.can_send_media_messages}\n"
+            #         # И так далее для всех полей в ChatPermissions
+
+            await message.reply(response_text)
+        else:
+            await message.reply("Я не администратор в этом чате.")
+    else:
+        await message.answer("Enter /check_rights [chat_id]")
 
 
 @dp.message(Command('start_new_season'))
