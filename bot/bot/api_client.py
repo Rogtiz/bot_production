@@ -27,7 +27,7 @@ async def create_user(chat_id: str, username: str) -> Optional[dict]:
 
 
 async def create_group(name: str, chat_id: str) -> Optional[dict]:
-    payload = {"name": name, "chat_id": chat_id}
+    payload = {"name": name, "chat_id": chat_id, "disabled": False}
     response = await client.post("/bot/group", json=payload)
     response.raise_for_status()
     return response.json()
