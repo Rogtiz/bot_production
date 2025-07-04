@@ -25,6 +25,13 @@ async def create_user(chat_id: str, username: str) -> Optional[dict]:
     response.raise_for_status()
     return response.json()
 
+
+async def create_group(name: str, chat_id: str) -> Optional[dict]:
+    payload = {"name": name, "chat_id": chat_id}
+    response = await client.post("/bot/group", json=payload)
+    response.raise_for_status()
+    return response.json()
+
 # --- FEEDBACK ---
 async def create_feedback(chat_id: str, content: str) -> dict:
     payload = {"chat_id": chat_id, "message": content}

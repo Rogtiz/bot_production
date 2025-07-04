@@ -404,11 +404,12 @@ async def handle_message(message: types.Message):
     print(message.text)
     username = message.text
     player_info = await formatter.format_ranking_info(username)
-    # if (message.chat.type == 'group' or message.chat.type == 'supergroup') and message.chat.id not in group_list:
-    #     group_name = message.chat.full_name
-    #     if len(group_name) < 3:
-    #         group_name = message.chat.username
-    #     database.add_new_group(message.chat.id, group_name)
+    if (message.chat.type == 'group' or message.chat.type == 'supergroup') and message.chat.id not in group_list:
+        group_name = message.chat.full_name
+        if len(group_name) < 3:
+            group_name = message.chat.username
+        new_group = await api_client.create_group(group_name, message.chat.id)
+        await bot.send_message(CHANNEL_SECRET_LOGS, f"Добавлена новая группа: \n{str(new_group)}")
     # # if message.from_user.username is None:
     # #     nick = message.from_user.first_name
     # #     if nick is None:
