@@ -189,17 +189,17 @@ async def cmd_check_rights(message: types.Message, command: CommandObject):
         if bot_member.status == ChatMemberStatus.ADMINISTRATOR:
             # Теперь вы можете получить доступ к полям, описывающим права администратора
             response_text = "Мои права администратора в этом чате:\n"
-            response_text += f"- Может менять информацию о чате: {member.can_change_info}\n"
-            response_text += f"- Может удалять сообщения: {member.can_delete_messages}\n"
-            response_text += f"- Может приглашать пользователей: {member.can_invite_users}\n"
-            response_text += f"- Может ограничивать участников: {member.can_restrict_members}\n"
-            response_text += f"- Может закреплять сообщения: {member.can_pin_messages}\n"
-            response_text += f"- Может добавлять новых администраторов: {member.can_promote_members}\n"
+            response_text += f"- Может менять информацию о чате: {bot_member.can_change_info}\n"
+            response_text += f"- Может удалять сообщения: {bot_member.can_delete_messages}\n"
+            response_text += f"- Может приглашать пользователей: {bot_member.can_invite_users}\n"
+            response_text += f"- Может ограничивать участников: {bot_member.can_restrict_members}\n"
+            response_text += f"- Может закреплять сообщения: {bot_member.can_pin_messages}\n"
+            response_text += f"- Может добавлять новых администраторов: {bot_member.can_promote_members}\n"
             # Дополнительные права для каналов
             if message.chat.type == types.ChatType.CHANNEL:
-                response_text += f"- Может постить сообщения: {member.can_post_messages}\n"
-                response_text += f"- Может редактировать сообщения других: {member.can_edit_messages}\n"
-                response_text += f"- Может управлять видеочатами: {member.can_manage_video_chats}\n"
+                response_text += f"- Может постить сообщения: {bot_member.can_post_messages}\n"
+                response_text += f"- Может редактировать сообщения других: {bot_member.can_edit_messages}\n"
+                response_text += f"- Может управлять видеочатами: {bot_member.can_manage_video_chats}\n"
 
             # Для aiogram 3.x, некоторые права могут быть вложены в ChatPermissions
             # if isinstance(member, types.ChatMemberAdministrator):
