@@ -68,5 +68,5 @@ class GroupSchema(BaseSchema):
 
 class GroupCreationSchema(BaseSchema):
     name: str = Field(..., min_length=1, max_length=100, description="The name of the group")
-    chat_id: str = Field(..., min_length=8, max_length=128, description="The chat ID of the group")
+    chat_id: str = Field(..., min_length=1, max_length=128, description="The chat ID of the group")
     disabled: bool = False
