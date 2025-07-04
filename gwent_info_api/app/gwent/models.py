@@ -30,7 +30,6 @@ class RankWinRate(Base):
     __tablename__ = "rank_win_rate"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    rank = Column(Integer, nullable=False)
     nilfgaard_wr = Column(Double, nullable=False)
     monsters_wr = Column(Double, nullable=False)
     skellige_wr = Column(Double, nullable=False)
