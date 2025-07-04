@@ -196,10 +196,10 @@ async def cmd_check_rights(message: types.Message, command: CommandObject):
             response_text += f"- Может закреплять сообщения: {bot_member.can_pin_messages}\n"
             response_text += f"- Может добавлять новых администраторов: {bot_member.can_promote_members}\n"
             # Дополнительные права для каналов
-            if message.chat.type == types.ChatType.CHANNEL:
-                response_text += f"- Может постить сообщения: {bot_member.can_post_messages}\n"
-                response_text += f"- Может редактировать сообщения других: {bot_member.can_edit_messages}\n"
-                response_text += f"- Может управлять видеочатами: {bot_member.can_manage_video_chats}\n"
+            # if message.chat.type == types.ChatType.CHANNEL:
+            #     response_text += f"- Может постить сообщения: {bot_member.can_post_messages}\n"
+            #     response_text += f"- Может редактировать сообщения других: {bot_member.can_edit_messages}\n"
+            #     response_text += f"- Может управлять видеочатами: {bot_member.can_manage_video_chats}\n"
 
             # Для aiogram 3.x, некоторые права могут быть вложены в ChatPermissions
             # if isinstance(member, types.ChatMemberAdministrator):
