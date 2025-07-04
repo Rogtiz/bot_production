@@ -408,7 +408,7 @@ async def handle_message(message: types.Message):
         group_name = message.chat.full_name
         if len(group_name) < 3:
             group_name = message.chat.username
-        new_group = await api_client.create_group(group_name, message.chat.id)
+        new_group = await api_client.create_group(name=str(group_name), chat_id=str(message.chat.id))
         await bot.send_message(CHANNEL_SECRET_LOGS, f"Добавлена новая группа: \n{str(new_group)}")
     # # if message.from_user.username is None:
     # #     nick = message.from_user.first_name
