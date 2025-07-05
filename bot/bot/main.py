@@ -240,12 +240,12 @@ async def cmd_promote(message: types.Message, command: CommandObject):
             await bot.promote_chat_member(
                 chat_id=chat_id,
                 user_id=user_id,
-                can_change_info=True,        # Может менять информацию о чате
+                can_change_info=False,        # Может менять информацию о чате
                 can_delete_messages=True,    # Может удалять сообщения
-                can_invite_users=True,       # Может приглашать пользователей по ссылкам
+                can_invite_users=False,       # Может приглашать пользователей по ссылкам
                 can_restrict_members=True,  # (НЕ) может ограничивать/банить участников
                 can_pin_messages=True,       # Может закреплять сообщения
-                can_promote_members=False,   # НЕ может добавлять новых администраторов (чтобы не создавалась цепочка админов)
+                can_promote_members=True,   # (НЕ) может добавлять новых администраторов (чтобы не создавалась цепочка админов)
                 # Для каналов:
                 # can_post_messages=True,      # Может постить сообщения (только для каналов)
                 # can_edit_messages=True,      # Может редактировать сообщения других (только для каналов)
