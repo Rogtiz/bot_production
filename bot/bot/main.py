@@ -226,6 +226,13 @@ async def cmd_promote(message: types.Message, command: CommandObject):
         text = text.split()
         user_id = text[0]
         chat_id = text[1]
+        rights_number = text[2]
+        promote_rights = [False, True, False, True, True, True]
+        demote_rights = [False, False, False, False, False, False]
+        if rights_number = 0:
+            rights = demote_rights
+        else:
+            rights = promote_rights
         try:
             # Получаем текущие права бота в чате
             bot_member = await bot.get_chat_member(chat_id, bot.id)
@@ -240,12 +247,12 @@ async def cmd_promote(message: types.Message, command: CommandObject):
             await bot.promote_chat_member(
                 chat_id=chat_id,
                 user_id=user_id,
-                can_change_info=False,        # Может менять информацию о чате
-                can_delete_messages=True,    # Может удалять сообщения
-                can_invite_users=False,       # Может приглашать пользователей по ссылкам
-                can_restrict_members=True,  # (НЕ) может ограничивать/банить участников
-                can_pin_messages=True,       # Может закреплять сообщения
-                can_promote_members=True,   # (НЕ) может добавлять новых администраторов (чтобы не создавалась цепочка админов)
+                can_change_info=rights[0],        # Может менять информацию о чате
+                can_delete_messages=rights[1],    # Может удалять сообщения
+                can_invite_users=rights[2],       # Может приглашать пользователей по ссылкам
+                can_restrict_members=rights[3],  # (НЕ) может ограничивать/банить участников
+                can_pin_messages=rights[4],       # Может закреплять сообщения
+                can_promote_members=rights[5],   # (НЕ) может добавлять новых администраторов (чтобы не создавалась цепочка админов)
                 # Для каналов:
                 # can_post_messages=True,      # Может постить сообщения (только для каналов)
                 # can_edit_messages=True,      # Может редактировать сообщения других (только для каналов)
@@ -255,7 +262,7 @@ async def cmd_promote(message: types.Message, command: CommandObject):
         except Exception as e:
             await message.reply(f"Произошла ошибка при назначении администратора: {e}")
     else:
-        await message.reply("Enter /promote [user_id] [chat_id]")
+        await message.reply("Enter /promote [user_id] [chat_id] [0/1]")
 
 
 @dp.message(Command('start_new_season'))
