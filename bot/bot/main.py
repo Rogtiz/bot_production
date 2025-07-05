@@ -229,7 +229,7 @@ async def cmd_promote(message: types.Message, command: CommandObject):
         rights_number = text[2]
         promote_rights = [False, True, False, True, True, True]
         demote_rights = [False, False, False, False, False, False]
-        if rights_number = 0:
+        if rights_number == 0:
             rights = demote_rights
         else:
             rights = promote_rights
