@@ -216,6 +216,48 @@ async def cmd_check_rights(message: types.Message, command: CommandObject):
         await message.answer("Enter /check_rights [chat_id]")
 
 
+@dp.message(Command('promote'))
+async def cmd_promote(message: types.Message, command: CommandObject):
+    user = await api_client.get_user_by_chat_id(str(message.chat.id))
+    if message.chat.type != 'private' or not user or user.get("admin_level") < 3:
+        return
+    text = command.args
+    if text:
+        text = text.split()
+        user_id = text[0]
+        chat_id = text[1]
+        try:
+            # Получаем текущие права бота в чате
+            bot_member = await bot.get_chat_member(chat_id, bot.id)
+            if bot_member.status != ChatMemberStatus.ADMINISTRATOR or not bot_member.can_promote_members:
+                await message.reply("У меня нет прав для назначения администраторов в этом чате. "
+                                    "Пожалуйста, убедитесь, что я администратор и имею право 'Добавление администраторов'.")
+                return
+
+            # Назначаем пользователя администратором с определёнными правами
+            # Здесь вы можете выбрать, какие права дать новому админу
+            # True означает, что право дано, False - нет
+            await bot.promote_chat_member(
+                chat_id=chat_id,
+                user_id=user_id,
+                can_change_info=True,        # Может менять информацию о чате
+                can_delete_messages=True,    # Может удалять сообщения
+                can_invite_users=True,       # Может приглашать пользователей по ссылкам
+                can_restrict_members=True,  # (НЕ) может ограничивать/банить участников
+                can_pin_messages=True,       # Может закреплять сообщения
+                can_promote_members=False,   # НЕ может добавлять новых администраторов (чтобы не создавалась цепочка админов)
+                # Для каналов:
+                # can_post_messages=True,      # Может постить сообщения (только для каналов)
+                # can_edit_messages=True,      # Может редактировать сообщения других (только для каналов)
+                # can_manage_video_chats=True, # Может управлять видеочатами (только для каналов)
+            )
+            await message.reply(f"Пользователь с ID {user_id} назначен администратором.")
+        except Exception as e:
+            await message.reply(f"Произошла ошибка при назначении администратора: {e}")
+    else:
+        await message.reply("Enter /promote [user_id] [chat_id]")
+
+
 @dp.message(Command('start_new_season'))
 async def cmd_update_season(message: types.Message):
     user = await api_client.get_user_by_chat_id(str(message.chat.id))
@@ -404,12 +446,12 @@ async def handle_message(message: types.Message):
     print(message.text)
     username = message.text
     player_info = await formatter.format_ranking_info(username)
-    if (message.chat.type == 'group' or message.chat.type == 'supergroup'):
-        group_name = message.chat.full_name
-        if len(group_name) < 3:
-            group_name = message.chat.username
-        new_group = await api_client.create_group(name=str(group_name), chat_id=str(message.chat.id))
-        await bot.send_message(CHANNEL_SECRET_LOGS, f"Добавлена новая группа: \n{str(new_group)}")
+    # if (message.chat.type == 'group' or message.chat.type == 'supergroup'):
+    #     group_name = message.chat.full_name
+    #     if len(group_name) < 3:
+    #         group_name = message.chat.username
+    #     new_group = await api_client.create_group(name=str(group_name), chat_id=str(message.chat.id))
+    #     await bot.send_message(CHANNEL_SECRET_LOGS, f"Добавлена новая группа: \n{str(new_group)}")
     # # if message.from_user.username is None:
     # #     nick = message.from_user.first_name
     # #     if nick is None:
